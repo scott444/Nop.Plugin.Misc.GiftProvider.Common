@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Nop.Core.Domain.Customers;
 using Nop.Core.Domain.Security;
 using Nop.Services.Security;
 
@@ -11,17 +10,35 @@ namespace Nop.Plugin.Misc.GiftProvider.Services;
 public class GiftPermissionProvider : IPermissionProvider
 {
     //admin area permissions
-    public static readonly PermissionRecord ManageGifts = new() { Name = "Admin area. Manage Gifts", SystemName = "ManageGifts", Category = "Catalog" };
+    public static readonly PermissionRecord ManageGifts = new() { Name = "Admin area. Manage Gifts", SystemName = "ManageGifts", Category = "Promo" };
 
-    public HashSet<(string systemRoleName, PermissionRecord[] permissions)> GetDefaultPermissions()
+    /// <summary>
+    /// Get permissions
+    /// </summary>
+    /// <returns>Permissions</returns>
+    public virtual IEnumerable<PermissionRecord> GetPermissions()
     {
-        throw new NotImplementedException();
+        return new[]
+        {
+            ManageGifts
+        };
     }
 
-    public IEnumerable<PermissionRecord> GetPermissions()
+    /// <summary>
+    /// Get default permissions
+    /// </summary>
+    /// <returns>Permissions</returns>
+    public virtual HashSet<(string systemRoleName, PermissionRecord[] permissions)> GetDefaultPermissions()
     {
-        throw new NotImplementedException();
+        return new HashSet<(string, PermissionRecord[])>
+            {
+                (
+                    NopCustomerDefaults.AdministratorsRoleName,
+                    new[]
+                    {
+                        ManageGifts
+                    }
+                )
+            };
     }
-
-
 }
